@@ -1,0 +1,119 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_horizontal_margin">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin">
+
+        <RelativeLayout
+            android:id="@+id/row1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/start_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_date"
+                android:textAppearance="@android:style/TextAppearance.Large" />
+
+            <EditText
+                android:id="@+id/start_box"
+                android:hint="@string/start_date_hint"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/row2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/row1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/term_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/term_text"
+                android:textAppearance="@android:style/TextAppearance.Large" />
+
+            <EditText
+                android:id="@+id/term_box"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/row3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/row2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/miles_delivered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/miles_delivered"
+                android:textAppearance="@android:style/TextAppearance.Large" />
+
+            <EditText
+                android:id="@+id/miles_delivered_box"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/row4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/row3"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/miles_allowed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/miles_allowed"
+                android:textAppearance="@android:style/TextAppearance.Large" />
+
+            <EditText
+                android:id="@+id/miles_allowed_box"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:text="@string/submit" />
+
+</RelativeLayout>
