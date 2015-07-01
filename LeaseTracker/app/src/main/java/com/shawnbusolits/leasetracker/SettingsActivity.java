@@ -56,6 +56,8 @@ public class SettingsActivity extends AppCompatActivity {
             mLeaseData.setMilesDelivered(Float.parseFloat(milesDeliveredBox.getText().toString()));
             mLeaseData.setMilesAllowed(Float.parseFloat(milesAllowedBox.getText().toString()));
 
+            mLeaseData.saveLeaseData();
+
             setResult(Activity.RESULT_OK);
             finish();
         }

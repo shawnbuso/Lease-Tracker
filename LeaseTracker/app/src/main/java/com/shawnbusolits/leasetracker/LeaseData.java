@@ -14,12 +14,14 @@ public class LeaseData {
 
     private static LeaseData INSTANCE = null;
 
-    public static final String PREFS_NAME = "LeaseTrackerPrefs";
-    public static final String START_DATE_ID = "start_date";
-    public static final String TERM_ID = "term";
-    public static final String MILES_DELIVERED_ID = "miles_delivered";
-    public static final String MILES_ALLOWED_ID = "miles_allowed";
-    public static final String MILES_CURRENT_ID = "miles_current";
+    public static final String FLOAT_FORMAT = "%.2f";
+
+    private static final String PREFS_NAME = "LeaseTrackerPrefs";
+    private static final String START_DATE_ID = "start_date";
+    private static final String TERM_ID = "term";
+    private static final String MILES_DELIVERED_ID = "miles_delivered";
+    private static final String MILES_ALLOWED_ID = "miles_allowed";
+    private static final String MILES_CURRENT_ID = "miles_current";
 
     private Context mContext;
     private Date mStartDate;
@@ -71,6 +73,10 @@ public class LeaseData {
         return mMilesDelivered;
     }
 
+    public String getMilesDeliveredString() {
+        return String.format(FLOAT_FORMAT, mMilesDelivered);
+    }
+
     public void setMilesDelivered(float milesDelivered) {
         mMilesDelivered = milesDelivered;
     }
@@ -79,8 +85,17 @@ public class LeaseData {
         return mMilesAllowed;
     }
 
+    public String getMilesAllowedString() {
+        return String.format(FLOAT_FORMAT, mMilesAllowed);
+    }
+
     public float getTotalMilesAllowed() {
-        return mMilesAllowed * (mTermLength / 12);
+        int totalMilesAllowed = (int) (mMilesAllowed * (mTermLength / 12));
+        return totalMilesAllowed;
+    }
+
+    public String getTotalMilesAllowedString() {
+        return String.format(FLOAT_FORMAT, getTotalMilesAllowed());
     }
 
     public void setMilesAllowed(float milesAllowed) {
@@ -89,6 +104,10 @@ public class LeaseData {
 
     public float getMilesCurrent() {
         return mMilesCurrent;
+    }
+
+    public String getMilesCurrentString() {
+        return String.format(FLOAT_FORMAT, mMilesCurrent);
     }
 
     public void setMilesCurrent(float milesCurrent) {
@@ -104,9 +123,9 @@ public class LeaseData {
             e.printStackTrace();
         }
         mTermLength = settings.getInt(TERM_ID, 0);
-        mMilesDelivered = settings.getInt(MILES_DELIVERED_ID, 0);
-        mMilesAllowed = settings.getInt(MILES_ALLOWED_ID, 0);
-        mMilesCurrent = settings.getInt(MILES_CURRENT_ID, 0);
+        mMilesDelivered = settings.getFloat(MILES_DELIVERED_ID, 0);
+        mMilesAllowed = settings.getFloat(MILES_ALLOWED_ID, 0);
+        mMilesCurrent = settings.getFloat(MILES_CURRENT_ID, 0);
     }
 
     public void saveLeaseData() {
@@ -116,7 +135,7 @@ public class LeaseData {
         editor.putString(START_DATE_ID, getStartDateString());
         editor.putInt(TERM_ID, mTermLength);
         editor.putFloat(MILES_DELIVERED_ID, mMilesDelivered);
-        editor.putFloat(MILES_ALLOWED_ID, mMilesAllowed * (mTermLength / 12));
+        editor.putFloat(MILES_ALLOWED_ID, mMilesAllowed);
         editor.commit();
     }
 }

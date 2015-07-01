@@ -1,6 +1,5 @@
 package com.shawnbusolits.leasetracker;
 
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -10,13 +9,12 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,9 +22,12 @@ import java.util.Date;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements TextWatcher {
+public class MainActivityFragment extends Fragment implements ViewTreeObserver.OnGlobalLayoutListener, TextWatcher {
 
+    private ColorProgressBar mTotalProgressBar;
     private EditText mCurrentMilesBox;
+
+    private int mTotalProgressBarWidth = 0;
     private LeaseData mLeaseData;
 
     public MainActivityFragment() {
@@ -36,9 +37,12 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
     public void onStart() {
         super.onStart();
         getLeaseData();
+        mTotalProgressBar = (ColorProgressBar) getActivity().findViewById(R.id.total_progress_bar);
+        mTotalProgressBar.getViewTreeObserver().addOnGlobalLayoutListener(this);
         mCurrentMilesBox = (EditText) getActivity().findViewById(R.id.current_miles);
         mCurrentMilesBox.setText(Float.toString(mLeaseData.getMilesCurrent()));
         mCurrentMilesBox.addTextChangedListener(this);
+        updateUI();
     }
 
     @Override
@@ -51,7 +55,6 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
         if (mLeaseData == null) {
             mLeaseData = LeaseData.getInstance(getActivity());
         }
-        updateUI();
     }
 
     public void updateUI() {
@@ -59,9 +62,11 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
             mLeaseData.getTermLength() > 0 &&
             mLeaseData.getMilesAllowed() > 0) {
             // Handle to UI things
-            ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
             View verticalLine = (View) getActivity().findViewById(R.id.vertical_line);
-            TextView expectedText = (TextView) getActivity().findViewById(R.id.expected_text_view);
+            TextView totalText = (TextView) getActivity().findViewById(R.id.total_text_view);
+            ColorProgressBar currentProgressBar = (ColorProgressBar) getActivity().findViewById(R.id.current_progress_bar);
+            TextView currentText = (TextView) getActivity().findViewById(R.id.current_text_view);
+            TextView dailyText = (TextView) getActivity().findViewById(R.id.daily_text_view);
 
             double maxMiles = mLeaseData.getMilesDelivered() + mLeaseData.getTotalMilesAllowed();
             int daysInLease = getDaysInLease();
@@ -72,22 +77,35 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
                     (mLeaseData.getMilesCurrent() - mLeaseData.getMilesDelivered()) / daysSinceStart;
             double expectedMiles = milesPerDay * daysInLease;
 
-            progressBar.setMax((int)mLeaseData.getTotalMilesAllowed());
-            progressBar.setProgress(
-                    (int)(mLeaseData.getMilesCurrent() - mLeaseData.getMilesDelivered()));
+            mTotalProgressBar.setMax((int) mLeaseData.getTotalMilesAllowed());
+            mTotalProgressBar.setProgress(
+                    (int) (mLeaseData.getMilesCurrent() - mLeaseData.getMilesDelivered()),
+                    (int) currentAllowedMiles);
 
-            RelativeLayout.LayoutParams layoutParams =
-                    (RelativeLayout.LayoutParams) verticalLine.getLayoutParams();
-            int lineMargin =
-                    (int) ((daysSinceStart * allowedMilesPerDay) / mLeaseData.getTotalMilesAllowed()) * progressBar.getWidth();
-            layoutParams.setMargins(lineMargin, dpToPx(15), 0, 0);
+            if (mTotalProgressBarWidth > 0) {
+                RelativeLayout.LayoutParams layoutParams =
+                        (RelativeLayout.LayoutParams) verticalLine.getLayoutParams();
+                double allowedMilesToToday = allowedMilesPerDay * daysSinceStart;
+                double marginThroughLease = allowedMilesToToday / mLeaseData.getTotalMilesAllowed();
+                int lineMargin = (int) (marginThroughLease * mTotalProgressBarWidth);
+                layoutParams.setMargins(lineMargin, dpToPx(15), 0, 0);
+                verticalLine.setLayoutParams(layoutParams);
+            }
 
-            expectedText.setText(
+            totalText.setText(
                     getActivity().getResources().getString(R.string.expected_text) +
-                    expectedMiles + " of " + mLeaseData.getTotalMilesAllowed() + "\n" +
-                    "CurrentAllowedMiles: " + currentAllowedMiles + "\n" +
-                    "Miles per day: " + milesPerDay + "\n" +
-                    "Allowed miles per day: " + allowedMilesPerDay);
+                            String.format(LeaseData.FLOAT_FORMAT, expectedMiles) + " of " +
+                            mLeaseData.getTotalMilesAllowedString());
+
+            currentProgressBar.setMax((int) currentAllowedMiles);
+            currentProgressBar.setProgress((int) mLeaseData.getMilesCurrent());
+            currentText.setText("Current mileage: " +
+                    mLeaseData.getMilesCurrentString() + " of " +
+                    String.format(LeaseData.FLOAT_FORMAT, currentAllowedMiles));
+            dailyText.setText("Daily mileage: " +
+                    String.format(LeaseData.FLOAT_FORMAT, milesPerDay) + " of " +
+                    String.format(LeaseData.FLOAT_FORMAT, allowedMilesPerDay));
+
         }
     }
 
@@ -129,7 +147,7 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         try {
-            mLeaseData.setMilesCurrent(Integer.parseInt(mCurrentMilesBox.getText().toString().trim()));
+            mLeaseData.setMilesCurrent(Float.parseFloat(mCurrentMilesBox.getText().toString().trim()));
             mLeaseData.saveLeaseData();
             updateUI();
         } catch (NumberFormatException e) {
@@ -140,5 +158,11 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
         return;
+    }
+
+    @Override
+    public void onGlobalLayout() {
+        mTotalProgressBarWidth = mTotalProgressBar.getWidth();
+        updateUI();
     }
 }
