@@ -17,30 +17,28 @@ import java.text.SimpleDateFormat;
  */
 public class SettingsActivity extends AppCompatActivity {
 
+    private LeaseData mLeaseData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        mLeaseData = LeaseData.getInstance(this);
+
         // Attach submit listener
         final Button button = (Button) findViewById(R.id.submit_button);
         button.setOnClickListener(new SubmitListener());
-
-        SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
-        String startDateString = settings.getString(MainActivity.START_DATE_ID, "");
-        int termLength = settings.getInt(MainActivity.TERM_ID, 0);
-        int milesDelivered = settings.getInt(MainActivity.MILES_DELIVERED_ID, 0);
-        int milesAllowed = settings.getInt(MainActivity.MILES_ALLOWED_ID, 0);
 
         EditText startBox = (EditText) findViewById(R.id.start_box);
         EditText termBox = (EditText) findViewById(R.id.term_box);
         EditText milesDeliveredBox = (EditText) findViewById(R.id.miles_delivered_box);
         EditText milesAllowedBox = (EditText) findViewById(R.id.miles_allowed_box);
 
-        startBox.setText(startDateString);
-        termBox.setText(termLength);
-        milesDeliveredBox.setText(milesDelivered);
-        milesAllowedBox.setText(milesAllowed);
+        startBox.setText(mLeaseData.getStartDateString());
+        termBox.setText(Integer.toString(mLeaseData.getTermLength()));
+        milesDeliveredBox.setText(Float.toString(mLeaseData.getMilesDelivered()));
+        milesAllowedBox.setText(Float.toString(mLeaseData.getMilesAllowed()));
 
     }
 
@@ -53,19 +51,12 @@ public class SettingsActivity extends AppCompatActivity {
             final EditText milesDeliveredBox = (EditText) findViewById(R.id.miles_delivered_box);
             final EditText milesAllowedBox = (EditText) findViewById(R.id.miles_allowed_box);
 
-            // Pass data back to main activity
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra(MainActivity.START_DATE_ID, startBox.getText().toString());
-            resultIntent.putExtra(
-                    MainActivity.TERM_ID, Integer.parseInt(termBox.getText().toString()));
-            resultIntent.putExtra(
-                    MainActivity.MILES_DELIVERED_ID,
-                    Integer.parseInt(milesDeliveredBox.getText().toString()));
-            resultIntent.putExtra(
-                    MainActivity.MILES_ALLOWED_ID,
-                    Integer.parseInt(milesAllowedBox.getText().toString()));
+            mLeaseData.setStartDate(startBox.getText().toString());
+            mLeaseData.setTermLength(Integer.parseInt(termBox.getText().toString()));
+            mLeaseData.setMilesDelivered(Float.parseFloat(milesDeliveredBox.getText().toString()));
+            mLeaseData.setMilesAllowed(Float.parseFloat(milesAllowedBox.getText().toString()));
 
-            setResult(Activity.RESULT_OK, resultIntent);
+            setResult(Activity.RESULT_OK);
             finish();
         }
     }
