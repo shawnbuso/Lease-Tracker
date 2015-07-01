@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -112,6 +113,43 @@ public class LeaseData {
 
     public void setMilesCurrent(float milesCurrent) {
         mMilesCurrent = milesCurrent;
+    }
+
+    public Date getEndDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(mStartDate);
+        calendar.add(Calendar.MONTH, mTermLength);
+        return calendar.getTime();
+    }
+
+    public int getDaysInLease() {
+        long startTime = mStartDate.getTime();
+        long endTime = getEndDate().getTime();
+        long timeDiff = endTime - startTime;
+        return (int) (timeDiff / (1000 * 60 * 60 * 24)) + 1;
+    }
+
+    public int getDaysSinceStart() {
+        long startTime = mStartDate.getTime();
+        long endTime = new Date().getTime();
+        long timeDiff = endTime - startTime;
+        return (int) (timeDiff / (1000 * 60 * 60 * 24)) + 1;
+    }
+
+    public float getCurrentAllowedMiles() {
+        return getAllowedMilesPerDay() * getDaysSinceStart();
+    }
+
+    public float getAllowedMilesPerDay() {
+        return getTotalMilesAllowed() / getDaysInLease();
+    }
+
+    public float getExpectedMiles() {
+        return getMilesPerDay() * getDaysInLease();
+    }
+
+    public float getMilesPerDay() {
+        return (getMilesCurrent() - getMilesDelivered()) / getDaysSinceStart();
     }
 
     public void loadLeaseData() {

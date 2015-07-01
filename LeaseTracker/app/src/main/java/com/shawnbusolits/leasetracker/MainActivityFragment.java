@@ -68,24 +68,16 @@ public class MainActivityFragment extends Fragment implements ViewTreeObserver.O
             TextView currentText = (TextView) getActivity().findViewById(R.id.current_text_view);
             TextView dailyText = (TextView) getActivity().findViewById(R.id.daily_text_view);
 
-            double maxMiles = mLeaseData.getMilesDelivered() + mLeaseData.getTotalMilesAllowed();
-            int daysInLease = getDaysInLease();
-            int daysSinceStart = getDaysSinceStart();
-            double allowedMilesPerDay = ((double) mLeaseData.getTotalMilesAllowed()) / daysInLease;
-            double currentAllowedMiles = allowedMilesPerDay * daysSinceStart;
-            double milesPerDay =
-                    (mLeaseData.getMilesCurrent() - mLeaseData.getMilesDelivered()) / daysSinceStart;
-            double expectedMiles = milesPerDay * daysInLease;
 
             mTotalProgressBar.setMax((int) mLeaseData.getTotalMilesAllowed());
             mTotalProgressBar.setProgress(
                     (int) (mLeaseData.getMilesCurrent() - mLeaseData.getMilesDelivered()),
-                    (int) currentAllowedMiles);
+                    (int) mLeaseData.getCurrentAllowedMiles());
 
             if (mTotalProgressBarWidth > 0) {
                 RelativeLayout.LayoutParams layoutParams =
                         (RelativeLayout.LayoutParams) verticalLine.getLayoutParams();
-                double allowedMilesToToday = allowedMilesPerDay * daysSinceStart;
+                double allowedMilesToToday = mLeaseData.getAllowedMilesPerDay() * mLeaseData.getDaysSinceStart();
                 double marginThroughLease = allowedMilesToToday / mLeaseData.getTotalMilesAllowed();
                 int lineMargin = (int) (marginThroughLease * mTotalProgressBarWidth);
                 layoutParams.setMargins(lineMargin, dpToPx(15), 0, 0);
@@ -94,17 +86,17 @@ public class MainActivityFragment extends Fragment implements ViewTreeObserver.O
 
             totalText.setText(
                     getActivity().getResources().getString(R.string.expected_text) +
-                            String.format(LeaseData.FLOAT_FORMAT, expectedMiles) + " of " +
-                            mLeaseData.getTotalMilesAllowedString());
+                            String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getExpectedMiles()) +
+                            " of " + mLeaseData.getTotalMilesAllowedString());
 
-            currentProgressBar.setMax((int) currentAllowedMiles);
+            currentProgressBar.setMax((int) mLeaseData.getCurrentAllowedMiles());
             currentProgressBar.setProgress((int) mLeaseData.getMilesCurrent());
             currentText.setText("Current mileage: " +
                     mLeaseData.getMilesCurrentString() + " of " +
-                    String.format(LeaseData.FLOAT_FORMAT, currentAllowedMiles));
+                    String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getCurrentAllowedMiles()));
             dailyText.setText("Daily mileage: " +
-                    String.format(LeaseData.FLOAT_FORMAT, milesPerDay) + " of " +
-                    String.format(LeaseData.FLOAT_FORMAT, allowedMilesPerDay));
+                    String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getMilesPerDay()) + " of " +
+                    String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getAllowedMilesPerDay()));
 
         }
     }
@@ -116,27 +108,6 @@ public class MainActivityFragment extends Fragment implements ViewTreeObserver.O
                 dp,
                 r.getDisplayMetrics()
         );
-    }
-
-    private Date getEndDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(mLeaseData.getStartDate());
-        calendar.add(Calendar.MONTH, mLeaseData.getTermLength());
-        return calendar.getTime();
-    }
-
-    private int getDaysInLease() {
-        long startTime = mLeaseData.getStartDate().getTime();
-        long endTime = getEndDate().getTime();
-        long timeDiff = endTime - startTime;
-        return (int) (timeDiff / (1000 * 60 * 60 * 24));
-    }
-
-    private int getDaysSinceStart() {
-        long startTime = mLeaseData.getStartDate().getTime();
-        long endTime = new Date().getTime();
-        long timeDiff = endTime - startTime;
-        return (int) (timeDiff / (1000 * 60 * 60 * 24)) + 1;
     }
 
     @Override
