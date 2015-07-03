@@ -6,21 +6,23 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * Created by Shawn on 7/3/2015.
  */
-public class SuperProgressBar extends RelativeLayout {
+public abstract class SuperProgressBar extends RelativeLayout {
 
-    protected ProgressBar mProgressBar;
+    protected ColorProgressBar mProgressBar;
     protected View mVerticalLine;
     protected TextView mTextView;
 
+    protected int mProgress;
+    protected int mTotal;
+
     protected int mWidth;
-    protected int mHeight;
+    protected int mVerticalLineMargin;
 
     public SuperProgressBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -28,7 +30,7 @@ public class SuperProgressBar extends RelativeLayout {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.super_progress_bar, this);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        mProgressBar = (ColorProgressBar) findViewById(R.id.progress_bar);
         mVerticalLine = findViewById(R.id.vertical_line);
         mTextView = (TextView) findViewById(R.id.progress_text_view);
     }
@@ -55,6 +57,9 @@ public class SuperProgressBar extends RelativeLayout {
         super.onSizeChanged(xNew, yNew, xOld, yOld);
 
         mWidth = xNew;
-        mHeight = yNew;
+
+        layoutVerticalLine();
     }
+
+    protected abstract void layoutVerticalLine();
 }

@@ -2,8 +2,6 @@ package com.shawnbusolits.leasetracker;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.widget.ProgressBar;

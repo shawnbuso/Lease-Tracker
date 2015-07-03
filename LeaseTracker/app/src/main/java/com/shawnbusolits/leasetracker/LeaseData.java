@@ -13,17 +13,14 @@ import java.util.Date;
  */
 public class LeaseData {
 
-    private static LeaseData INSTANCE = null;
-
     public static final String FLOAT_FORMAT = "%.2f";
-
     private static final String PREFS_NAME = "LeaseTrackerPrefs";
     private static final String START_DATE_ID = "start_date";
     private static final String TERM_ID = "term";
     private static final String MILES_DELIVERED_ID = "miles_delivered";
     private static final String MILES_ALLOWED_ID = "miles_allowed";
     private static final String MILES_CURRENT_ID = "miles_current";
-
+    private static LeaseData INSTANCE = null;
     private Context mContext;
     private Date mStartDate;
     private int mTermLength;
@@ -50,16 +47,16 @@ public class LeaseData {
         return mStartDate;
     }
 
-    public String getStartDateString() {
-        return mStartDate == null ? "" : mDateFormatter.format(mStartDate);
-    }
-
     public void setStartDate(String startDate) {
         try {
             mStartDate = mDateFormatter.parse(startDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getStartDateString() {
+        return mStartDate == null ? "" : mDateFormatter.format(mStartDate);
     }
 
     public int getTermLength() {
@@ -74,16 +71,20 @@ public class LeaseData {
         return mMilesDelivered;
     }
 
-    public String getMilesDeliveredString() {
-        return String.format(FLOAT_FORMAT, mMilesDelivered);
-    }
-
     public void setMilesDelivered(float milesDelivered) {
         mMilesDelivered = milesDelivered;
     }
 
+    public String getMilesDeliveredString() {
+        return String.format(FLOAT_FORMAT, mMilesDelivered);
+    }
+
     public float getMilesAllowed() {
         return mMilesAllowed;
+    }
+
+    public void setMilesAllowed(float milesAllowed) {
+        mMilesAllowed = milesAllowed;
     }
 
     public String getMilesAllowedString() {
@@ -99,20 +100,16 @@ public class LeaseData {
         return String.format(FLOAT_FORMAT, getTotalMilesAllowed());
     }
 
-    public void setMilesAllowed(float milesAllowed) {
-        mMilesAllowed = milesAllowed;
-    }
-
     public float getMilesCurrent() {
         return mMilesCurrent;
     }
 
-    public String getMilesCurrentString() {
-        return String.format(FLOAT_FORMAT, mMilesCurrent);
-    }
-
     public void setMilesCurrent(float milesCurrent) {
         mMilesCurrent = milesCurrent;
+    }
+
+    public String getMilesCurrentString() {
+        return String.format(FLOAT_FORMAT, mMilesCurrent);
     }
 
     public Date getEndDate() {

@@ -15,19 +15,25 @@ public class DailyProgressBar extends SuperProgressBar {
     }
 
     public void setProgress(int progress, int total) {
+        mProgress = progress;
+        mTotal = total;
         if (progress > total) {
-            mProgressBar.setProgress(total);
-
+            mProgressBar.setProgress(mTotal);
+            layoutVerticalLine();
             mVerticalLine.setVisibility(View.VISIBLE);
-            RelativeLayout.LayoutParams layoutParams =
-                    (RelativeLayout.LayoutParams) mVerticalLine.getLayoutParams();
-            double marginThroughAllowance = progress / total;
-            int lineMargin = (int) (marginThroughAllowance * mWidth);
-            layoutParams.setMargins(lineMargin, dpToPx(15), 0, 0);
-            mVerticalLine.setLayoutParams(layoutParams);
         } else {
-            mProgressBar.setProgress(progress);
+            mProgressBar.setProgress(mProgress);
             mVerticalLine.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    protected void layoutVerticalLine() {
+        double marginThroughAllowance = ((double) mTotal) / mProgress;
+        mVerticalLineMargin = (int) (marginThroughAllowance * mWidth);
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams) mVerticalLine.getLayoutParams();
+        layoutParams.setMargins(mVerticalLineMargin, dpToPx(15), 0, 0);
+        mVerticalLine.setLayoutParams(layoutParams);
     }
 }

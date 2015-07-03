@@ -1,22 +1,13 @@
 package com.shawnbusolits.leasetracker;
 
-import android.content.res.Resources;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import java.util.Calendar;
-import java.util.Date;
 
 
 /**
@@ -80,11 +71,11 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
             mDailyProgressBar.setMax((int) mLeaseData.getCurrentAllowedMiles());
             mDailyProgressBar.setProgress(
                     (int) mLeaseData.getMilesCurrent(),
-                    (int) mLeaseData.getAllowedMilesPerDay());
+                    (int) mLeaseData.getCurrentAllowedMiles());
             mDailyProgressBar.setText("Current mileage: " +
                     mLeaseData.getMilesCurrentString() + " of " +
                     String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getCurrentAllowedMiles()) +
-                    "Daily mileage: " +
+                    "\nDaily mileage: " +
                     String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getMilesPerDay()) + " of " +
                     String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getAllowedMilesPerDay()));
 
