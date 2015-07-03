@@ -91,13 +91,12 @@ public class LeaseData {
         return String.format(FLOAT_FORMAT, mMilesAllowed);
     }
 
-    public float getTotalMilesAllowed() {
-        int totalMilesAllowed = (int) (mMilesAllowed * (mTermLength / 12));
-        return totalMilesAllowed;
+    public int getTotalMilesAllowed() {
+        return ((int) mMilesAllowed * (mTermLength / 12));
     }
 
     public String getTotalMilesAllowedString() {
-        return String.format(FLOAT_FORMAT, getTotalMilesAllowed());
+        return Integer.toString(getTotalMilesAllowed());
     }
 
     public float getMilesCurrent() {
@@ -146,7 +145,11 @@ public class LeaseData {
     }
 
     public float getMilesPerDay() {
-        return (getMilesCurrent() - getMilesDelivered()) / getDaysSinceStart();
+        return (mMilesCurrent - mMilesDelivered) / getDaysSinceStart();
+    }
+
+    public float getAllowedMilesToPresent() {
+        return getAllowedMilesPerDay() * getDaysSinceStart();
     }
 
     public void loadLeaseData() {

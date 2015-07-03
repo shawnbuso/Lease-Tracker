@@ -57,12 +57,11 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
                 mLeaseData.getTermLength() > 0 &&
                 mLeaseData.getMilesAllowed() > 0) {
 
-            double allowedMilesToToday = mLeaseData.getAllowedMilesPerDay() * mLeaseData.getDaysSinceStart();
             mTotalProgressBar.setMax((int) mLeaseData.getTotalMilesAllowed());
             mTotalProgressBar.setProgress(
                     (int) (mLeaseData.getMilesCurrent() - mLeaseData.getMilesDelivered()),
                     (int) mLeaseData.getTotalMilesAllowed(),
-                    (int) allowedMilesToToday);
+                    (int) mLeaseData.getAllowedMilesToPresent());
             mTotalProgressBar.setText(
                     getActivity().getResources().getString(R.string.expected_text) +
                             String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getExpectedMiles()) +
