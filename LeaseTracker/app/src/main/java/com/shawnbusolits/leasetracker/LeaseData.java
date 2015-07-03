@@ -21,6 +21,8 @@ public class LeaseData {
     private static final String MILES_DELIVERED_ID = "miles_delivered";
     private static final String MILES_ALLOWED_ID = "miles_allowed";
     private static final String MILES_CURRENT_ID = "miles_current";
+    private static final String OVERAGE_CHARGE_ID = "overage_charge";
+
     private static LeaseData INSTANCE = null;
     private Context mContext;
     private Date mStartDate;
@@ -28,6 +30,7 @@ public class LeaseData {
     private float mMilesDelivered;
     private float mMilesAllowed;
     private float mMilesCurrent;
+    private float mOverageCharge;
 
     private SimpleDateFormat mDateFormatter = null;
 
@@ -112,6 +115,14 @@ public class LeaseData {
         return String.format(FLOAT_FORMAT, mMilesCurrent);
     }
 
+    public void setOverageCharge(float overageCharge) {
+        mOverageCharge = overageCharge;
+    }
+
+    public float getOverageCharge() {
+        return mOverageCharge;
+    }
+
     public Date getEndDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(mStartDate);
@@ -138,7 +149,7 @@ public class LeaseData {
     }
 
     public float getAllowedMilesPerDay() {
-        return getTotalMilesAllowed() / getDaysInLease();
+        return ((float)getTotalMilesAllowed()) / getDaysInLease();
     }
 
     public float getExpectedMiles() {
@@ -153,9 +164,9 @@ public class LeaseData {
         return getAllowedMilesPerDay() * getDaysSinceStart();
     }
 
-    public String getOverageCharge() {
+    public String getOverageChargeString() {
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
-        return formatter.format((getExpectedMiles() - (getTotalMilesAllowed() + mMilesDelivered)) * 0.15);
+        return formatter.format((getExpectedMiles() - (getTotalMilesAllowed() + mMilesDelivered)) * mOverageCharge);
     }
 
     public void loadLeaseData() {
@@ -170,6 +181,7 @@ public class LeaseData {
         mMilesDelivered = settings.getFloat(MILES_DELIVERED_ID, 0);
         mMilesAllowed = settings.getFloat(MILES_ALLOWED_ID, 0);
         mMilesCurrent = settings.getFloat(MILES_CURRENT_ID, 0);
+        mOverageCharge = settings.getFloat(OVERAGE_CHARGE_ID, 0);
     }
 
     public void saveLeaseData() {
@@ -180,6 +192,7 @@ public class LeaseData {
         editor.putInt(TERM_ID, mTermLength);
         editor.putFloat(MILES_DELIVERED_ID, mMilesDelivered);
         editor.putFloat(MILES_ALLOWED_ID, mMilesAllowed);
+        editor.putFloat(OVERAGE_CHARGE_ID, mOverageCharge);
         editor.commit();
     }
 }

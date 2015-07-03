@@ -14,6 +14,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     private LeaseData mLeaseData;
 
+    EditText mStartBox;
+    EditText mTermBox;
+    EditText mMilesDeliveredBox;
+    EditText mMilesAllowedBox;
+    EditText mOverageChargeBox;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,31 +31,28 @@ public class SettingsActivity extends AppCompatActivity {
         final Button button = (Button) findViewById(R.id.submit_button);
         button.setOnClickListener(new SubmitListener());
 
-        EditText startBox = (EditText) findViewById(R.id.start_box);
-        EditText termBox = (EditText) findViewById(R.id.term_box);
-        EditText milesDeliveredBox = (EditText) findViewById(R.id.miles_delivered_box);
-        EditText milesAllowedBox = (EditText) findViewById(R.id.miles_allowed_box);
+        mStartBox = (EditText) findViewById(R.id.start_box);
+        mTermBox = (EditText) findViewById(R.id.term_box);
+        mMilesDeliveredBox = (EditText) findViewById(R.id.miles_delivered_box);
+        mMilesAllowedBox = (EditText) findViewById(R.id.miles_allowed_box);
+        mOverageChargeBox = (EditText) findViewById(R.id.overage_charge_box);
 
-        startBox.setText(mLeaseData.getStartDateString());
-        termBox.setText(Integer.toString(mLeaseData.getTermLength()));
-        milesDeliveredBox.setText(Float.toString(mLeaseData.getMilesDelivered()));
-        milesAllowedBox.setText(Float.toString(mLeaseData.getMilesAllowed()));
+        mStartBox.setText(mLeaseData.getStartDateString());
+        mTermBox.setText(Integer.toString(mLeaseData.getTermLength()));
+        mMilesDeliveredBox.setText(Float.toString(mLeaseData.getMilesDelivered()));
+        mMilesAllowedBox.setText(Float.toString(mLeaseData.getMilesAllowed()));
+        mOverageChargeBox.setText(Float.toString(mLeaseData.getOverageCharge()));
 
     }
 
     private class SubmitListener implements View.OnClickListener {
 
         public void onClick(View v) {
-            // Get handle to inputs
-            final EditText startBox = (EditText) findViewById(R.id.start_box);
-            final EditText termBox = (EditText) findViewById(R.id.term_box);
-            final EditText milesDeliveredBox = (EditText) findViewById(R.id.miles_delivered_box);
-            final EditText milesAllowedBox = (EditText) findViewById(R.id.miles_allowed_box);
-
-            mLeaseData.setStartDate(startBox.getText().toString());
-            mLeaseData.setTermLength(Integer.parseInt(termBox.getText().toString()));
-            mLeaseData.setMilesDelivered(Float.parseFloat(milesDeliveredBox.getText().toString()));
-            mLeaseData.setMilesAllowed(Float.parseFloat(milesAllowedBox.getText().toString()));
+            mLeaseData.setStartDate(mStartBox.getText().toString());
+            mLeaseData.setTermLength(Integer.parseInt(mTermBox.getText().toString()));
+            mLeaseData.setMilesDelivered(Float.parseFloat(mMilesDeliveredBox.getText().toString()));
+            mLeaseData.setMilesAllowed(Float.parseFloat(mMilesAllowedBox.getText().toString()));
+            mLeaseData.setOverageCharge(Float.parseFloat(mOverageChargeBox.getText().toString()));
 
             mLeaseData.saveLeaseData();
 

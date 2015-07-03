@@ -9,5 +9,6 @@
     <string name="term_text">Lease term (months):</string>
     <string name="miles_delivered">Miles at delivery:</string>
     <string name="miles_allowed">Miles allowed per year:</string>
+    <string name="overage_charge">Excess miles charge:</string>
     <string name="submit">Submit</string>
 </resources>

@@ -77,7 +77,7 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
                     String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getExpectedMiles()) +
                     " of " + mLeaseData.getTotalMilesAllowedString();
             if (mLeaseData.getExpectedMiles() > (mLeaseData.getTotalMilesAllowed() + mLeaseData.getMilesDelivered())) {
-                totalText += "\nOverage cost: " + mLeaseData.getOverageCharge();
+                totalText += "\nOverage cost: " + mLeaseData.getOverageChargeString();
             }
             mTotalProgressBar.setText(totalText);
 

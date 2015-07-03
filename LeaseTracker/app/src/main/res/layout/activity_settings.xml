@@ -110,6 +110,30 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/row5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/row4"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/overage_charge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/overage_charge"
+                android:textAppearance="@android:style/TextAppearance.Large" />
+
+            <EditText
+                android:id="@+id/overage_charge_box"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:inputType="number" />
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
     <Button
