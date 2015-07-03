@@ -31,7 +31,7 @@ public class ColorProgressBar extends ProgressBar {
     public void setProgress(int progress) {
         Resources res = getContext().getResources();
         Rect bounds = getProgressDrawable().getBounds();
-        if (progress > getMax()) {
+        if (progress >= getMax()) {
             setProgressDrawable(res.getDrawable(R.drawable.redprogressbar));
         } else if (progress >= (getMax() * WARN_THRESHOLD_PERCENTAGE)) {
             setProgressDrawable(res.getDrawable(R.drawable.yellowprogressbar));

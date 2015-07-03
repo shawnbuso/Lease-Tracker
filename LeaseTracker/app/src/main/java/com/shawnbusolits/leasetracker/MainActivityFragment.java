@@ -22,12 +22,12 @@ import java.util.Date;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements ViewTreeObserver.OnGlobalLayoutListener, TextWatcher {
+public class MainActivityFragment extends Fragment implements TextWatcher {
 
-    private ColorProgressBar mTotalProgressBar;
+    private TotalProgressBar mTotalProgressBar;
+    private DailyProgressBar mDailyProgressBar;
     private EditText mCurrentMilesBox;
 
-    private int mTotalProgressBarWidth = 0;
     private LeaseData mLeaseData;
 
     public MainActivityFragment() {
@@ -36,12 +36,16 @@ public class MainActivityFragment extends Fragment implements ViewTreeObserver.O
     @Override
     public void onStart() {
         super.onStart();
+
         getLeaseData();
-        mTotalProgressBar = (ColorProgressBar) getActivity().findViewById(R.id.total_progress_bar);
-        mTotalProgressBar.getViewTreeObserver().addOnGlobalLayoutListener(this);
+
+        mTotalProgressBar = (TotalProgressBar) getActivity().findViewById(R.id.total_progress_bar);
+        mDailyProgressBar = (DailyProgressBar) getActivity().findViewById(R.id.daily_progress_bar);
         mCurrentMilesBox = (EditText) getActivity().findViewById(R.id.current_miles);
+
         mCurrentMilesBox.setText(Float.toString(mLeaseData.getMilesCurrent()));
         mCurrentMilesBox.addTextChangedListener(this);
+
         updateUI();
     }
 
@@ -59,55 +63,32 @@ public class MainActivityFragment extends Fragment implements ViewTreeObserver.O
 
     public void updateUI() {
         if (mLeaseData.getStartDate() != null &&
-            mLeaseData.getTermLength() > 0 &&
-            mLeaseData.getMilesAllowed() > 0) {
-            // Handle to UI things
-            View verticalLine = (View) getActivity().findViewById(R.id.vertical_line);
-            TextView totalText = (TextView) getActivity().findViewById(R.id.total_text_view);
-            ColorProgressBar currentProgressBar = (ColorProgressBar) getActivity().findViewById(R.id.current_progress_bar);
-            TextView currentText = (TextView) getActivity().findViewById(R.id.current_text_view);
-            TextView dailyText = (TextView) getActivity().findViewById(R.id.daily_text_view);
+                mLeaseData.getTermLength() > 0 &&
+                mLeaseData.getMilesAllowed() > 0) {
 
-
+            double allowedMilesToToday = mLeaseData.getAllowedMilesPerDay() * mLeaseData.getDaysSinceStart();
             mTotalProgressBar.setMax((int) mLeaseData.getTotalMilesAllowed());
             mTotalProgressBar.setProgress(
                     (int) (mLeaseData.getMilesCurrent() - mLeaseData.getMilesDelivered()),
-                    (int) mLeaseData.getCurrentAllowedMiles());
-
-            if (mTotalProgressBarWidth > 0) {
-                RelativeLayout.LayoutParams layoutParams =
-                        (RelativeLayout.LayoutParams) verticalLine.getLayoutParams();
-                double allowedMilesToToday = mLeaseData.getAllowedMilesPerDay() * mLeaseData.getDaysSinceStart();
-                double marginThroughLease = allowedMilesToToday / mLeaseData.getTotalMilesAllowed();
-                int lineMargin = (int) (marginThroughLease * mTotalProgressBarWidth);
-                layoutParams.setMargins(lineMargin, dpToPx(15), 0, 0);
-                verticalLine.setLayoutParams(layoutParams);
-            }
-
-            totalText.setText(
+                    (int) mLeaseData.getTotalMilesAllowed(),
+                    (int) allowedMilesToToday);
+            mTotalProgressBar.setText(
                     getActivity().getResources().getString(R.string.expected_text) +
                             String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getExpectedMiles()) +
                             " of " + mLeaseData.getTotalMilesAllowedString());
 
-            currentProgressBar.setMax((int) mLeaseData.getCurrentAllowedMiles());
-            currentProgressBar.setProgress((int) mLeaseData.getMilesCurrent());
-            currentText.setText("Current mileage: " +
+            mDailyProgressBar.setMax((int) mLeaseData.getCurrentAllowedMiles());
+            mDailyProgressBar.setProgress(
+                    (int) mLeaseData.getMilesCurrent(),
+                    (int) mLeaseData.getAllowedMilesPerDay());
+            mDailyProgressBar.setText("Current mileage: " +
                     mLeaseData.getMilesCurrentString() + " of " +
-                    String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getCurrentAllowedMiles()));
-            dailyText.setText("Daily mileage: " +
+                    String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getCurrentAllowedMiles()) +
+                    "Daily mileage: " +
                     String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getMilesPerDay()) + " of " +
                     String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getAllowedMilesPerDay()));
 
         }
-    }
-
-    private int dpToPx(int dp) {
-        Resources r = getActivity().getResources();
-        return (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp,
-                r.getDisplayMetrics()
-        );
     }
 
     @Override
@@ -129,11 +110,5 @@ public class MainActivityFragment extends Fragment implements ViewTreeObserver.O
     @Override
     public void afterTextChanged(Editable s) {
         return;
-    }
-
-    @Override
-    public void onGlobalLayout() {
-        mTotalProgressBarWidth = mTotalProgressBar.getWidth();
-        updateUI();
     }
 }
