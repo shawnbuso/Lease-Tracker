@@ -57,16 +57,6 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
                 mLeaseData.getTermLength() > 0 &&
                 mLeaseData.getMilesAllowed() > 0) {
 
-            mTotalProgressBar.setMax((int) mLeaseData.getTotalMilesAllowed());
-            mTotalProgressBar.setProgress(
-                    (int) (mLeaseData.getMilesCurrent() - mLeaseData.getMilesDelivered()),
-                    (int) mLeaseData.getTotalMilesAllowed(),
-                    (int) mLeaseData.getAllowedMilesToPresent());
-            mTotalProgressBar.setText(
-                    getActivity().getResources().getString(R.string.expected_text) +
-                            String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getExpectedMiles()) +
-                            " of " + mLeaseData.getTotalMilesAllowedString());
-
             mDailyProgressBar.setMax((int) mLeaseData.getCurrentAllowedMiles());
             mDailyProgressBar.setProgress(
                     (int) mLeaseData.getMilesCurrent(),
@@ -77,6 +67,19 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
                     "\nDaily mileage: " +
                     String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getMilesPerDay()) + " of " +
                     String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getAllowedMilesPerDay()));
+
+            mTotalProgressBar.setMax((int) mLeaseData.getTotalMilesAllowed());
+            mTotalProgressBar.setProgress(
+                    (int) (mLeaseData.getMilesCurrent() - mLeaseData.getMilesDelivered()),
+                    (int) mLeaseData.getTotalMilesAllowed(),
+                    (int) mLeaseData.getAllowedMilesToPresent());
+            String totalText = getActivity().getResources().getString(R.string.expected_text) +
+                    String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getExpectedMiles()) +
+                    " of " + mLeaseData.getTotalMilesAllowedString();
+            if (mLeaseData.getExpectedMiles() > (mLeaseData.getTotalMilesAllowed() + mLeaseData.getMilesDelivered())) {
+                totalText += "\nOverage cost: " + mLeaseData.getOverageCharge();
+            }
+            mTotalProgressBar.setText(totalText);
 
         }
     }

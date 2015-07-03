@@ -3,6 +3,7 @@ package com.shawnbusolits.leasetracker;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -150,6 +151,11 @@ public class LeaseData {
 
     public float getAllowedMilesToPresent() {
         return getAllowedMilesPerDay() * getDaysSinceStart();
+    }
+
+    public String getOverageCharge() {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        return formatter.format((getExpectedMiles() - (getTotalMilesAllowed() + mMilesDelivered)) * 0.15);
     }
 
     public void loadLeaseData() {
