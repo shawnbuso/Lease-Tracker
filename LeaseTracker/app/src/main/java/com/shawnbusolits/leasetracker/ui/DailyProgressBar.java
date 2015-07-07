@@ -1,8 +1,7 @@
-package com.shawnbusolits.leasetracker;
+package com.shawnbusolits.leasetracker.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 /**
@@ -20,10 +19,10 @@ public class DailyProgressBar extends SuperProgressBar {
         if (progress > total) {
             mProgressBar.setProgress(mTotal);
             layoutVerticalLine();
-            mVerticalLine.setVisibility(View.VISIBLE);
+            mVerticalLine.setVisibility(VISIBLE);
         } else {
             mProgressBar.setProgress(mProgress);
-            mVerticalLine.setVisibility(View.INVISIBLE);
+            mVerticalLine.setVisibility(INVISIBLE);
         }
     }
 

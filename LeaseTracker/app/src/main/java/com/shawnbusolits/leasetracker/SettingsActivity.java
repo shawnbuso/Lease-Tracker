@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.shawnbusolits.leasetracker.data.LeaseData;
+
 /**
  * Created by sbusolits on 6/30/15.
  */
@@ -39,9 +41,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         mStartBox.setText(mLeaseData.getStartDateString());
         mTermBox.setText(Integer.toString(mLeaseData.getTermLength()));
-        mMilesDeliveredBox.setText(Float.toString(mLeaseData.getMilesDelivered()));
-        mMilesAllowedBox.setText(Float.toString(mLeaseData.getMilesAllowed()));
-        mOverageChargeBox.setText(Float.toString(mLeaseData.getOverageCharge()));
+        mMilesDeliveredBox.setText(Integer.toString(mLeaseData.getMilesDelivered()));
+        mMilesAllowedBox.setText(Integer.toString(mLeaseData.getMilesAllowed()));
+        mOverageChargeBox.setText(mLeaseData.getOverageChargeString());
 
     }
 
@@ -50,8 +52,8 @@ public class SettingsActivity extends AppCompatActivity {
         public void onClick(View v) {
             mLeaseData.setStartDate(mStartBox.getText().toString());
             mLeaseData.setTermLength(Integer.parseInt(mTermBox.getText().toString()));
-            mLeaseData.setMilesDelivered(Float.parseFloat(mMilesDeliveredBox.getText().toString()));
-            mLeaseData.setMilesAllowed(Float.parseFloat(mMilesAllowedBox.getText().toString()));
+            mLeaseData.setMilesDelivered(Integer.parseInt(mMilesDeliveredBox.getText().toString()));
+            mLeaseData.setMilesAllowed(Integer.parseInt(mMilesAllowedBox.getText().toString()));
             mLeaseData.setOverageCharge(Float.parseFloat(mOverageChargeBox.getText().toString()));
 
             mLeaseData.saveLeaseData();

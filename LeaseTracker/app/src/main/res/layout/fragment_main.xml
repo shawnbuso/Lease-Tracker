@@ -16,13 +16,13 @@
         android:gravity="center_horizontal"
         android:inputType="number" />
 
-    <com.shawnbusolits.leasetracker.DailyProgressBar
+    <com.shawnbusolits.leasetracker.ui.DailyProgressBar
         android:id="@+id/daily_progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/current_miles" />
 
-    <com.shawnbusolits.leasetracker.TotalProgressBar
+    <com.shawnbusolits.leasetracker.ui.TotalProgressBar
         android:id="@+id/total_progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

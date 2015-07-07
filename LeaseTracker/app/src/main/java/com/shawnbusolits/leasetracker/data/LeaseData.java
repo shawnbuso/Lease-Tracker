@@ -1,4 +1,4 @@
-package com.shawnbusolits.leasetracker;
+package com.shawnbusolits.leasetracker.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,9 +27,9 @@ public class LeaseData {
     private Context mContext;
     private Date mStartDate;
     private int mTermLength;
-    private float mMilesDelivered;
-    private float mMilesAllowed;
-    private float mMilesCurrent;
+    private int mMilesDelivered;
+    private int mMilesAllowed;
+    private int mMilesCurrent;
     private float mOverageCharge;
 
     private SimpleDateFormat mDateFormatter = null;
@@ -71,11 +71,11 @@ public class LeaseData {
         mTermLength = termLength;
     }
 
-    public float getMilesDelivered() {
+    public int getMilesDelivered() {
         return mMilesDelivered;
     }
 
-    public void setMilesDelivered(float milesDelivered) {
+    public void setMilesDelivered(int milesDelivered) {
         mMilesDelivered = milesDelivered;
     }
 
@@ -83,11 +83,11 @@ public class LeaseData {
         return String.format(FLOAT_FORMAT, mMilesDelivered);
     }
 
-    public float getMilesAllowed() {
+    public int getMilesAllowed() {
         return mMilesAllowed;
     }
 
-    public void setMilesAllowed(float milesAllowed) {
+    public void setMilesAllowed(int milesAllowed) {
         mMilesAllowed = milesAllowed;
     }
 
@@ -103,24 +103,28 @@ public class LeaseData {
         return Integer.toString(getTotalMilesAllowed());
     }
 
-    public float getMilesCurrent() {
+    public int getMilesCurrent() {
         return mMilesCurrent;
     }
 
-    public void setMilesCurrent(float milesCurrent) {
+    public void setMilesCurrent(int milesCurrent) {
         mMilesCurrent = milesCurrent;
     }
 
     public String getMilesCurrentString() {
-        return String.format(FLOAT_FORMAT, mMilesCurrent);
+        return Integer.toString(mMilesCurrent);
     }
 
     public void setOverageCharge(float overageCharge) {
         mOverageCharge = overageCharge;
     }
 
-    public float getOverageCharge() {
+    public double getOverageCharge() {
         return mOverageCharge;
+    }
+
+    public String getOverageChargeString() {
+        return String.format(FLOAT_FORMAT, mOverageCharge);
     }
 
     public Date getEndDate() {
@@ -144,27 +148,27 @@ public class LeaseData {
         return (int) (timeDiff / (1000 * 60 * 60 * 24)) + 1;
     }
 
-    public float getCurrentAllowedMiles() {
+    public double getCurrentAllowedMiles() {
         return getAllowedMilesPerDay() * getDaysSinceStart();
     }
 
-    public float getAllowedMilesPerDay() {
+    public double getAllowedMilesPerDay() {
         return ((float)getTotalMilesAllowed()) / getDaysInLease();
     }
 
-    public float getExpectedMiles() {
+    public double getExpectedMiles() {
         return getMilesPerDay() * getDaysInLease();
     }
 
-    public float getMilesPerDay() {
-        return (mMilesCurrent - mMilesDelivered) / getDaysSinceStart();
+    public double getMilesPerDay() {
+        return ((double)(mMilesCurrent - mMilesDelivered)) / getDaysSinceStart();
     }
 
-    public float getAllowedMilesToPresent() {
+    public double getAllowedMilesToPresent() {
         return getAllowedMilesPerDay() * getDaysSinceStart();
     }
 
-    public String getOverageChargeString() {
+    public String getOverageTotalChargeString() {
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         return formatter.format((getExpectedMiles() - (getTotalMilesAllowed() + mMilesDelivered)) * mOverageCharge);
     }
@@ -178,20 +182,20 @@ public class LeaseData {
             e.printStackTrace();
         }
         mTermLength = settings.getInt(TERM_ID, 0);
-        mMilesDelivered = settings.getFloat(MILES_DELIVERED_ID, 0);
-        mMilesAllowed = settings.getFloat(MILES_ALLOWED_ID, 0);
-        mMilesCurrent = settings.getFloat(MILES_CURRENT_ID, 0);
+        mMilesDelivered = settings.getInt(MILES_DELIVERED_ID, 0);
+        mMilesAllowed = settings.getInt(MILES_ALLOWED_ID, 0);
+        mMilesCurrent = settings.getInt(MILES_CURRENT_ID, 0);
         mOverageCharge = settings.getFloat(OVERAGE_CHARGE_ID, 0);
     }
 
     public void saveLeaseData() {
         SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putFloat(MILES_CURRENT_ID, mMilesCurrent);
+        editor.putInt(MILES_CURRENT_ID, mMilesCurrent);
         editor.putString(START_DATE_ID, getStartDateString());
         editor.putInt(TERM_ID, mTermLength);
-        editor.putFloat(MILES_DELIVERED_ID, mMilesDelivered);
-        editor.putFloat(MILES_ALLOWED_ID, mMilesAllowed);
+        editor.putInt(MILES_DELIVERED_ID, mMilesDelivered);
+        editor.putInt(MILES_ALLOWED_ID, mMilesAllowed);
         editor.putFloat(OVERAGE_CHARGE_ID, mOverageCharge);
         editor.commit();
     }

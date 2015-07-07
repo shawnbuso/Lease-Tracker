@@ -1,4 +1,4 @@
-package com.shawnbusolits.leasetracker;
+package com.shawnbusolits.leasetracker.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;

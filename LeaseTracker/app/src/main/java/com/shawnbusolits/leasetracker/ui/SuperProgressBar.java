@@ -1,4 +1,4 @@
-package com.shawnbusolits.leasetracker;
+package com.shawnbusolits.leasetracker.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.shawnbusolits.leasetracker.R;
 
 /**
  * Created by Shawn on 7/3/2015.

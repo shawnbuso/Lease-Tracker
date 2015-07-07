@@ -1,10 +1,12 @@
-package com.shawnbusolits.leasetracker;
+package com.shawnbusolits.leasetracker.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.widget.ProgressBar;
+
+import com.shawnbusolits.leasetracker.R;
 
 /**
  * Created by sbusolits on 7/1/15.

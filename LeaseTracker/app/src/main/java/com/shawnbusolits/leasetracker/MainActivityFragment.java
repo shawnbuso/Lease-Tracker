@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.shawnbusolits.leasetracker.data.LeaseData;
+import com.shawnbusolits.leasetracker.ui.DailyProgressBar;
+import com.shawnbusolits.leasetracker.ui.TotalProgressBar;
+
 
 /**
  * A placeholder fragment containing a simple view.
@@ -34,7 +38,7 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
         mDailyProgressBar = (DailyProgressBar) getActivity().findViewById(R.id.daily_progress_bar);
         mCurrentMilesBox = (EditText) getActivity().findViewById(R.id.current_miles);
 
-        mCurrentMilesBox.setText(Float.toString(mLeaseData.getMilesCurrent()));
+        mCurrentMilesBox.setText(Integer.toString(mLeaseData.getMilesCurrent()));
         mCurrentMilesBox.addTextChangedListener(this);
 
         updateUI();
@@ -77,7 +81,7 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
                     String.format(LeaseData.FLOAT_FORMAT, mLeaseData.getExpectedMiles()) +
                     " of " + mLeaseData.getTotalMilesAllowedString();
             if (mLeaseData.getExpectedMiles() > (mLeaseData.getTotalMilesAllowed() + mLeaseData.getMilesDelivered())) {
-                totalText += "\nOverage cost: " + mLeaseData.getOverageChargeString();
+                totalText += "\nOverage cost: " + mLeaseData.getOverageTotalChargeString();
             }
             mTotalProgressBar.setText(totalText);
 
@@ -92,7 +96,7 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         try {
-            mLeaseData.setMilesCurrent(Float.parseFloat(mCurrentMilesBox.getText().toString().trim()));
+            mLeaseData.setMilesCurrent(Integer.parseInt(mCurrentMilesBox.getText().toString().trim()));
             mLeaseData.saveLeaseData();
             updateUI();
         } catch (NumberFormatException e) {
@@ -103,5 +107,12 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
         return;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        if (mLeaseData != null) {
+            mLeaseData.saveLeaseData();
+        }
     }
 }
