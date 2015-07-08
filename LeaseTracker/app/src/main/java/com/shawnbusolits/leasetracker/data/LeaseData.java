@@ -173,6 +173,25 @@ public class LeaseData {
         return formatter.format((getExpectedMiles() - (getTotalMilesAllowed() + mMilesDelivered)) * mOverageCharge);
     }
 
+    public double getDaysTillRunout() {
+        return getTotalMilesAllowed() / getMilesPerDay();
+    }
+
+    public Date getMileageRunoutDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(mStartDate);
+        calendar.add(Calendar.DATE, (int)getDaysTillRunout());
+        return calendar.getTime();
+    }
+
+    public String getMileageRunoutDateString() {
+        return mDateFormatter.format(getMileageRunoutDate());
+    }
+
+    public int getOverageDayGap() {
+        return (int)(getDaysInLease() - getDaysTillRunout());
+    }
+
     public void loadLeaseData() {
         SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME, 0);
         String startDateString = settings.getString(START_DATE_ID, "");
