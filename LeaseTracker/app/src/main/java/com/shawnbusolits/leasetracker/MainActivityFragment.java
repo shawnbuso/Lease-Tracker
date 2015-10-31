@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import com.shawnbusolits.leasetracker.data.LeaseData;
 import com.shawnbusolits.leasetracker.ui.DailyProgressBar;
 import com.shawnbusolits.leasetracker.ui.TotalProgressBar;
@@ -42,6 +45,10 @@ public class MainActivityFragment extends Fragment implements TextWatcher {
         mCurrentMilesBox.addTextChangedListener(this);
 
         updateUI();
+
+        AdView mAdView = (AdView) getActivity().findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override
