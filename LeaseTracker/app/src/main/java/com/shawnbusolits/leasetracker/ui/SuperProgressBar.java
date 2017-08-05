@@ -2,6 +2,7 @@ package com.shawnbusolits.leasetracker.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -61,6 +62,15 @@ public abstract class SuperProgressBar extends RelativeLayout {
         mWidth = xNew;
 
         layoutVerticalLine();
+
+        // Force re-draw
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                requestLayout();
+            }
+        });
     }
 
     protected abstract void layoutVerticalLine();
